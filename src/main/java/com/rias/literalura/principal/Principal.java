@@ -1,14 +1,19 @@
 package com.rias.literalura.principal;
 
-
+import java.util.List;
 import java.util.Scanner;
 
+import com.rias.literalura.modelos.Libro;
+import com.rias.literalura.modelos.Response;
+import com.rias.literalura.service.ConvierteDatos;
 import com.rias.literalura.service.ServiceConsultaApi;
 
 public class Principal {
     private static ServiceConsultaApi consultaApi = new ServiceConsultaApi();
     private Scanner teclado = new Scanner(System.in);
     private final String URL_BASE = "https://gutendex.com/books/";
+    private final String SEACH = "?search=";
+    private ConvierteDatos convierteDatos = new ConvierteDatos();
     // private List<Libros> libros;
     private String menu = """
             \n1 - Buscar libro por titulo
@@ -26,9 +31,10 @@ public class Principal {
         while (opcion != 0) {
             System.out.println(menu);
             opcion = teclado.nextInt();
+            teclado.nextLine();
             switch (opcion) {
                 case 1:
-                    buscarLibroPorTitulo();
+                consultaLibroTitulo();
                     break;
                 case 2:
                     verLibrosBuscados();
@@ -53,8 +59,12 @@ public class Principal {
     }
 
     private void buscarLibroPorTitulo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'buscarLibroPorTitulo'");
+        consultaLibroTitulo();
+        // System.out.println("Ingresa el litulo del libro a buscar");
+        // String libro = teclado.nextLine();
+        // System.out.println(libro);
+        // var respuesta = consultaApi.obtenerDatos(URL_BASE + SEACH + libro.replace(" ", "%20"));
+        // System.out.println(respuesta);
     }
 
     private void verLibrosBuscados() {
@@ -77,8 +87,13 @@ public class Principal {
         throw new UnsupportedOperationException("Unimplemented method 'verLibrosPorIdioma'");
     }
 
-    public void consultaApiLibros() {
-        var respuesta = consultaApi.obtenerDatos(URL_BASE);
-        System.out.println(respuesta);
+    public List<Libro> consultaLibroTitulo() {
+    System.out.println("Ingresa el titulo a buscar: ");
+    String libro = teclado.nextLine().replace(" ", "%20");
+    var json = consultaApi.obtenerDatos(URL_BASE+SEACH+libro);
+    System.out.println(json);
+    Response respuesta = convierteDatos.obtenerDatos(json, Response.class);
+    System.out.println(respuesta);
+    return null;
     }
 }
