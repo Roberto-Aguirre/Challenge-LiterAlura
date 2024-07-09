@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.rias.literalura.modelos.Libro;
-import com.rias.literalura.modelos.Response;
+import com.rias.literalura.modelos.DatosResponse;
 import com.rias.literalura.service.ConvierteDatos;
 import com.rias.literalura.service.ServiceConsultaApi;
 
@@ -89,11 +89,15 @@ public class Principal {
 
     public List<Libro> consultaLibroTitulo() {
     System.out.println("Ingresa el titulo a buscar: ");
-    String libro = teclado.nextLine().replace(" ", "%20");
+    var libro = teclado.nextLine().replace(" ", "%20");
     var json = consultaApi.obtenerDatos(URL_BASE+SEACH+libro);
     System.out.println(json);
-    Response respuesta = convierteDatos.obtenerDatos(json, Response.class);
-    System.out.println(respuesta);
+    DatosResponse respuesta = convierteDatos.obtenerDatos(json, DatosResponse.class);
+
+    respuesta.datosLibros().stream()
+    .forEach(e->new Libro(e));
+    
+    
     return null;
     }
 }
