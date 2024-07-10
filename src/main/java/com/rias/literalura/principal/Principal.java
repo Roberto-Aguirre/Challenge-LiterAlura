@@ -2,9 +2,14 @@ package com.rias.literalura.principal;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.rias.literalura.modelos.Libro;
-import com.rias.literalura.modelos.DatosResponse;
+import com.rias.literalura.modelos.dto.DatosLibro;
+import com.rias.literalura.modelos.dto.DatosResponse;
+import com.rias.literalura.repository.LibroRepository;
+import com.rias.literalura.modelos.Autor;
 import com.rias.literalura.service.ConvierteDatos;
 import com.rias.literalura.service.ServiceConsultaApi;
 
@@ -14,6 +19,7 @@ public class Principal {
     private final String URL_BASE = "https://gutendex.com/books/";
     private final String SEACH = "?search=";
     private ConvierteDatos convierteDatos = new ConvierteDatos();
+    private LibroRepository libroRepository;
     // private List<Libros> libros;
     private String menu = """
             \n1 - Buscar libro por titulo
@@ -25,7 +31,9 @@ public class Principal {
 
             0 - Salir
             """;
-
+    public Principal(LibroRepository libroRepository){
+        this.libroRepository = libroRepository;
+    }
     public void mostrarMenu() {
         var opcion = -1;
         while (opcion != 0) {
@@ -34,7 +42,7 @@ public class Principal {
             teclado.nextLine();
             switch (opcion) {
                 case 1:
-                consultaLibroTitulo();
+                buscarLibroPorTitulo();
                     break;
                 case 2:
                     verLibrosBuscados();
@@ -59,7 +67,13 @@ public class Principal {
     }
 
     private void buscarLibroPorTitulo() {
-        consultaLibroTitulo();
+        List<Libro> libros = consultaLibroTitulo();
+        Libro libroSubir = libros.get(0);
+        System.out.println(libroSubir);
+        libroRepository.save(libroSubir);
+        
+        // libroRepository.save(libroSubir);
+        
         // System.out.println("Ingresa el litulo del libro a buscar");
         // String libro = teclado.nextLine();
         // System.out.println(libro);
@@ -91,13 +105,11 @@ public class Principal {
     System.out.println("Ingresa el titulo a buscar: ");
     var libro = teclado.nextLine().replace(" ", "%20");
     var json = consultaApi.obtenerDatos(URL_BASE+SEACH+libro);
-    System.out.println(json);
+    // System.out.println(json);
     DatosResponse respuesta = convierteDatos.obtenerDatos(json, DatosResponse.class);
-
-    respuesta.datosLibros().stream()
-    .forEach(e->new Libro(e));
+    List<DatosLibro> datosLibros = respuesta.datosLibros();
     
+    return datosLibros.stream().map(e->new Libro(e)).collect(Collectors.toList());
     
-    return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.rias.literalura.modelos;
+package com.rias.literalura.modelos.dto;
 
 import java.util.List;
 
