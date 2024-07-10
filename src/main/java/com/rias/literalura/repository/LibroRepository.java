@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface LibroRepository extends JpaRepository<Libro,Long>{
     
-    List<Libro> findByNombre(String nombre);
     
     // @Query(value="SELECT * FROM Libros WHERE totaltemporadas <= 2 AND evaluacion >= 7",nativeQuery = true)
     // @Query("SELECT s FROM Libro s WHERE s.totaltemporadas <= :temporadas AND s.evaluacion >= :evaluacion")

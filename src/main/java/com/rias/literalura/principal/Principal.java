@@ -6,6 +6,8 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.rias.literalura.modelos.Libro;
+import com.rias.literalura.modelos.dto.DatosAutor;
+import com.rias.literalura.modelos.dto.DatosLibro;
 import com.rias.literalura.modelos.dto.DatosResponse;
 import com.rias.literalura.repository.AutorRepository;
 import com.rias.literalura.repository.LibroRepository;
@@ -22,6 +24,9 @@ public class Principal {
     private ConvierteDatos convierteDatos = new ConvierteDatos();
     private LibroRepository libroRepository;
     private AutorRepository autorRepository;
+    private List<Autor> autores;
+    private List<Libro> libros;
+
     private String menu = """
             \n1 - Buscar libro por titulo
             2 - Lista libros registrados
@@ -75,10 +80,16 @@ public class Principal {
 
     private void buscarLibroPorTitulo() {
 
-        List<Libro> libros = consultaLibroTitulo();
-        Libro libro = libros.get(0);
-        System.out.println(libro);
-        libroRepository.save(libro);
+        DatosResponse datos = consultaLibroTitulo();
+        DatosLibro libro = datos.datosLibros().get(0);
+        Libro primerLibro = new Libro(libro);
+        DatosAutor datosAutor = libro.autores().get(0);
+        Autor autor = new Autor(datosAutor);
+        primerLibro.setAutor(autor);
+        libroRepository.save(primerLibro);
+
+
+
         // System.out.println(libroSubir);
         // libroRepository.save(libroSubir);
 
@@ -112,7 +123,7 @@ public class Principal {
         throw new UnsupportedOperationException("Unimplemented method 'verLibrosPorIdioma'");
     }
 
-    public List<Libro> consultaLibroTitulo() {
+    public DatosResponse consultaLibroTitulo() {
         System.out.println("Ingresa el titulo a buscar: ");
         var libro = teclado.nextLine().replace(" ", "%20");
         var json = consultaApi.obtenerDatos(URL_BASE + SEACH + libro);
@@ -120,9 +131,7 @@ public class Principal {
         // System.out.println(json);
         // List<DatosLibro> datosLibros = respuesta.datosLibros();
 
-        return respuesta.datosLibros().stream()
-                .map(e -> new Libro(e))
-                .collect(Collectors.toList());
+        return respuesta;
         // return null;
     }
 }
