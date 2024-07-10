@@ -3,7 +3,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
+# Mis archivos de prueba
+src/main/java/com/rias/literalura/modelos/Libro.txt
+src/main/java/com/rias/literalura/modelos/Autor.txt
 ### STS ###
 .apt_generated
 .classpath
