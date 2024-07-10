@@ -9,18 +9,21 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-@Entity
-@Table(name = "libros")
+@Entity(name = "libros")
+@Table(name = "LIBROS")
 public class Libro {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
     String nombre;
     String idiomas;
     Long descargas;
     //! Linked Id
+
     @ManyToOne
-    @JoinColumn(name = "autores")
+    @JoinColumn(name = "autor")
     Autor autor;
     
    public Libro(){
