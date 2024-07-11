@@ -1,92 +1,10 @@
-// package com.rias.literalura.modelos;
-
-
-
-// import com.rias.literalura.modelos.dto.DatosLibro;
-
-// import jakarta.persistence.*;
-
-
-// @Entity
-// @Table(name = "libros")
-// public class Libro {
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Long Id;
-//     private String titulo;
-//     @ManyToOne
-//     private Autor autor;
-//     private String lenguaje;
-//     private Integer numero_descargas;
-
-//     public Libro(){}
-
-//     public Libro(DatosLibro datosLibro){
-//         this.titulo = datosLibro.nombre();
-//         this.lenguaje = datosLibro.idiomas().get(0);
-//         this.numero_descargas = datosLibro.descargas();
-//     }
-
-//     @Override
-//     public String toString() {
-//         String nombreAutor = (autor != null) ? autor.getNombre() : "Autor desconocido";
-//         return String.format("********** Libro **********%nTitulo:" +
-//                 " %s%nAutor: %s%nIdioma: %s%nNumero de Descargar:" +
-//                 " %d%n***************************%n",titulo,nombreAutor,lenguaje,numero_descargas);
-//     }
-
-//     public Long getId() {
-//         return Id;
-//     }
-
-//     public void setId(Long id) {
-//         Id = id;
-//     }
-
-//     public String getTitulo() {
-//         return titulo;
-//     }
-
-//     public void setTitulo(String titulo) {
-//         this.titulo = titulo;
-//     }
-
-//     public Autor getAutor() {
-//         return autor;
-//     }
-
-//     public void setAutor(Autor autor) {
-//         this.autor = autor;
-//     }
-
-//     public String getLenguaje() {
-//         return lenguaje;
-//     }
-
-//     public void setLenguaje(String lenguaje) {
-//         this.lenguaje = lenguaje;
-//     }
-
-//     public Integer getNumero_descargas() {
-//         return numero_descargas;
-//     }
-
-//     public void setNumero_descargas(Integer numero_descargas) {
-//         this.numero_descargas = numero_descargas;
-//     }
-// }
 package com.rias.literalura.modelos;
 
 import com.rias.literalura.modelos.dto.DatosLibro;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+
 @Entity
 @Table(name = "libros")
 public class Libro {
@@ -97,25 +15,50 @@ public class Libro {
     private String nombre;
     private String idiomas;
     private Integer descargas;
-    //! Linked Id
+    // ! Linked Id
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Autor autor;
-    
-   public Libro(){
-    
-   }
+
+    public Libro() {
+
+    }
 
     public Libro(DatosLibro datosLibro) {
         this.nombre = datosLibro.nombre();
         this.idiomas = datosLibro.idiomas().get(0);
         this.descargas = datosLibro.descargas();
     }
-    
+
     @Override
     public String toString() {
-        return "Libro [nombre=" + nombre + ", idiomas=" + idiomas
-                + ", descargas=" + descargas + ", autor=" + autor + "]";
+        String libro = """
+                ============ Libro ============
+                Titulo: %titulo
+                Autor: %autor
+                Idioma: %idioma
+                Descargas totales: %descargas
+                ===============================
+                """;                
+        libro = libro.replace("%titulo", this.getNombre());
+        libro = libro.replace("%autor", this.getAutor().getNombre());
+        switch (this.idiomas) {
+            case "es":
+            libro = libro.replace("%idioma", "Español");
+                break;
+            case "en":
+            libro = libro.replace("%idioma", "Ingles");
+                break;
+            case "fr":
+            libro = libro.replace("%idioma", "Frances");
+                break;
+            default:
+            libro = libro.replace("%idioma", "Idioma desconocido");
+                break;
+        }
+
+        libro = libro.replace("%descargas", String.valueOf(this.getDescargas()));
+        return libro;
     }
 
     public Long getId() {
@@ -157,6 +100,5 @@ public class Libro {
     public void setAutor(Autor autor) {
         this.autor = autor;
     }
-
 
 }

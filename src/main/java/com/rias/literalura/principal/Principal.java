@@ -2,8 +2,6 @@ package com.rias.literalura.principal;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import com.rias.literalura.modelos.Libro;
 import com.rias.literalura.modelos.dto.DatosAutor;
@@ -87,30 +85,17 @@ public class Principal {
         Autor autor = new Autor(datosAutor);
         primerLibro.setAutor(autor);
         libroRepository.save(primerLibro);
-
-
-
-        // System.out.println(libroSubir);
-        // libroRepository.save(libroSubir);
-
-        // libroRepository.save(libroSubir);
-
-        // System.out.println("Ingresa el litulo del libro a buscar");
-        // String libro = teclado.nextLine();
-        // System.out.println(libro);
-        // var respuesta = consultaApi.obtenerDatos(URL_BASE + SEACH + libro.replace("
-        // ", "%20"));
-        // System.out.println(respuesta);
     }
 
     private void verLibrosBuscados() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'verLibrosBuscados'");
+        List<Libro> librosBuscados = libroRepository.findAll();
+        librosBuscados.stream()
+        .forEach(e->System.out.println(e.toString()));
     }
 
     private void verAutoresRegistrados() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'verAutoresRegistrados'");
+        autorRepository.findAll().stream()
+        .forEach(a->System.out.println(a));
     }
 
     private void verAutoresEnAnnoN() {
