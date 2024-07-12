@@ -23,9 +23,12 @@ public class Principal {
     private ConvierteDatos convierteDatos = new ConvierteDatos();
     private LibroRepository libroRepository;
     private AutorRepository autorRepository;
-
+    private final String commandLinner = "> ";
     private String menu = """
-            \n1 - Buscar libro por titulo
+            ----------------------------------------------
+            Literalura realizado por Roberto Aguirre
+            
+            1 - Buscar libro por titulo
             2 - Lista libros registrados
             3 - Listar autores registrados
             4 - Listar autores vivos en un determinado año
@@ -33,14 +36,15 @@ public class Principal {
 
 
             0 - Salir
+            ----------------------------------------------
             """;
     private String idiomas = """
             Elige un idioma para filtrar los libros
-            es-spañol
-            en-Ingles
-            fr-Frances
-            pt-Portugues
-
+            es - spañol
+            en - Ingles
+            fr - Frances
+            pt - Portugues
+            it - Italiano
             """;
 
     public Principal(LibroRepository libroRepository, AutorRepository autorRepository) {
@@ -56,6 +60,7 @@ public class Principal {
         var opcion = -1;
         while (opcion != 0) {
             System.out.println(menu);
+            System.out.print(commandLinner);
             opcion = teclado.nextInt();
             teclado.nextLine();
             switch (opcion) {
@@ -124,8 +129,10 @@ public class Principal {
 
     private void verAutoresEnAnnoN() {
         System.out.println("Ingresa el año de nacimiento");
+        System.out.print(commandLinner);
         int inicio = teclado.nextInt();
         System.out.println("Ingresa el año de nacimiento");
+        System.out.print(commandLinner);
         int fin = teclado.nextInt();
         var autores = autorRepository.encontrarAutoresEntreFechas(inicio, fin);
         if (autores.isEmpty()) {
@@ -138,6 +145,7 @@ public class Principal {
     private void verLibrosPorIdioma() {
         System.out.println(idiomas);
         System.out.println("Ingresa las siglas para buscar un libro ");
+        System.out.print(commandLinner);
         String idioma = teclado.nextLine();
         var libros = libroRepository.encontrarPorIdioma(idioma);
         if (libros.isEmpty()) {
@@ -149,6 +157,7 @@ public class Principal {
 
     public String consultaLibroTitulo() {
         System.out.println("Ingresa el titulo a buscar: ");
+        System.out.print(commandLinner);
         var libro = teclado.nextLine().replace(" ", "%20");
         var json = consultaApi.obtenerDatos(URL_BASE + SEACH + libro);
         // DatosResponse respuesta = convierteDatos.obtenerDatos(json,
